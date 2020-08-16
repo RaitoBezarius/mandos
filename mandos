@@ -219,7 +219,7 @@ class PGPEngine:
             for line in output.splitlines():
                 name, text, path = line.split(b":")
                 if name == b"gpg":
-                    self.gpg = path
+                    self.gpg = path.decode('utf8')
                     break
         except OSError as e:
             if e.errno != errno.ENOENT:
@@ -229,7 +229,7 @@ class PGPEngine:
                           '--force-mdc',
                           '--quiet']
         # Only GPG version 1 has the --no-use-agent option.
-        if self.gpg == b"gpg" or self.gpg.endswith(b"/gpg"):
+        if self.gpg == "gpg" or self.gpg.endswith("/gpg"):
             self.gnupgargs.append("--no-use-agent")
 
     def __enter__(self):
