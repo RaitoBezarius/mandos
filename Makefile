@@ -407,27 +407,24 @@ install-server: doc
 		install --mode=u=rw,go=r sysusers.d-mandos.conf \
 			$(SYSUSERS)/mandos.conf; \
 	fi
-	install --mode=u=rwx,go=rx mandos $(PREFIX)/sbin/mandos
+	install -D --mode=u=rwx,go=rx mandos $(PREFIX)/sbin/mandos
 	install --mode=u=rwx,go=rx --target-directory=$(PREFIX)/sbin \
 		mandos-ctl
 	install --mode=u=rwx,go=rx --target-directory=$(PREFIX)/sbin \
 		mandos-monitor
-	install --mode=u=rw,go=r --target-directory=$(CONFDIR) \
+	install -D --mode=u=rw,go=r --target-directory=$(CONFDIR) \
 		mandos.conf
 	install --mode=u=rw --target-directory=$(CONFDIR) \
 		clients.conf
-	install --mode=u=rw,go=r dbus-mandos.conf \
+	install -D --mode=u=rw,go=r dbus-mandos.conf \
 		$(DESTDIR)/etc/dbus-1/system.d/mandos.conf
-	install --mode=u=rwx,go=rx init.d-mandos \
+	install -D --mode=u=rwx,go=rx init.d-mandos \
 		$(DESTDIR)/etc/init.d/mandos
 	if [ "$(SYSTEMD)" != "$(DESTDIR)" -a -d "$(SYSTEMD)" ]; then \
 		install --mode=u=rw,go=r mandos.service $(SYSTEMD); \
 	fi
-	install --mode=u=rw,go=r default-mandos \
-		$(DESTDIR)/etc/default/mandos
-	if [ -z $(DESTDIR) ]; then \
-		update-rc.d mandos defaults 25 15;\
-	fi
+	mkdir -p $(MANDIR)/man5
+	mkdir -p $(MANDIR)/man8
 	gzip --best --to-stdout mandos.8 \
 		> $(MANDIR)/man8/mandos.8.gz
 	gzip --best --to-stdout mandos-monitor.8 \
@@ -464,7 +461,7 @@ install-client-nokey: all doc
 	install --mode=u=rwx,go=rx \
 		--target-directory=$(LIBDIR)/mandos \
 		mandos-to-cryptroot-unlock
-	install --mode=u=rwx,go=rx --target-directory=$(PREFIX)/sbin \
+	install -D --mode=u=rwx,go=rx --target-directory=$(PREFIX)/sbin \
 		mandos-keygen
 	install --mode=u=rwx,go=rx \
 		--target-directory=$(LIBDIR)/mandos/plugins.d \
@@ -487,15 +484,15 @@ install-client-nokey: all doc
 	install --mode=u=rwx,go=rx \
 		--target-directory=$(LIBDIR)/mandos/plugin-helpers \
 		plugin-helpers/mandos-client-iprouteadddel
-	install initramfs-tools-hook \
+	install -D initramfs-tools-hook \
 		$(INITRAMFSTOOLS)/hooks/mandos
-	install --mode=u=rw,go=r initramfs-tools-conf \
+	install -D --mode=u=rw,go=r initramfs-tools-conf \
 		$(INITRAMFSTOOLS)/conf.d/mandos-conf
-	install --mode=u=rw,go=r initramfs-tools-conf-hook \
+	install -D --mode=u=rw,go=r initramfs-tools-conf-hook \
 		$(INITRAMFSTOOLS)/conf-hooks.d/zz-mandos
-	install initramfs-tools-script \
+	install -D initramfs-tools-script \
 		$(INITRAMFSTOOLS)/scripts/init-premount/mandos
-	install initramfs-tools-script-stop \
+	install -D initramfs-tools-script-stop \
 		$(INITRAMFSTOOLS)/scripts/local-premount/mandos
 	install --directory $(DRACUTMODULE)
 	install --mode=u=rw,go=r --target-directory=$(DRACUTMODULE) \
@@ -507,6 +504,7 @@ install-client-nokey: all doc
 		dracut-module/cmdline-mandos.sh \
 		dracut-module/password-agent
 	install --mode=u=rw,go=r plugin-runner.conf $(CONFDIR)
+	mkdir -p $(MANDIR)/man8
 	gzip --best --to-stdout mandos-keygen.8 \
 		> $(MANDIR)/man8/mandos-keygen.8.gz
 	gzip --best --to-stdout plugin-runner.8mandos \
